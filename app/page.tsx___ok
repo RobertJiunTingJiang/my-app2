@@ -7,21 +7,17 @@ export default function Home() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
       <h1 className="text-4xl font-bold mb-8">小遊戲選擇</h1>
       <div className="flex flex-col gap-4">
-        <Link href="/game1">
+        <Link href="/game1/page_game1">
           <button className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
             玩貪吃蛇
           </button>
         </Link>
-        <Link href="/game2">
+        <Link href="/game2/page_game2">
           <button className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
             背英文單字
           </button>
         </Link>
       </div>
-      <footer className="mt-8 text-gray-600 text-sm">
-        <p>作者：江俊廷</p>
-        <p>日期：2025年9月24日</p>
-      </footer>
     </div>
   );
 }
