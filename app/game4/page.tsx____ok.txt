@@ -4,22 +4,22 @@ import React from 'react';
 
 const Game4Page = () => {
   return (
-    // 外層容器填滿整個螢幕並使用 flexbox
+    // 使用 Flexbox 讓內容垂直置中並填滿整個螢幕高度
     <div className="flex flex-col items-center justify-start min-h-screen bg-gray-900 text-white p-4">
       <h1 className="text-4xl font-bold mb-6 mt-12">嵌入的 HTML 遊戲(0924_1119)</h1>
       
-      {/* 這個 div 是 iframe 的容器，給予它 flex-grow 讓它佔據所有剩餘空間
-        並使用 flexbox 讓 iframe 居中
+      {/*
+        這個 div 是 iframe 的容器，它將填滿所有剩餘空間
       */}
-      <div className="flex-grow flex justify-center w-full">
+      <div className="flex-grow flex items-center justify-center w-full h-full">
         {/*
-          iframe 本身，我們將其寬高設定為 100vh 和 100% 的寬度，
-          並使用一個 max-width 來限制其最大尺寸以確保不會過大
+          iframe 本身，使用 Tailwind CSS class 讓它填滿父容器
+          `w-full` 和 `h-full` 非常重要
         */}
         <iframe
           src="/pub_game/enhanced_snake_game.html"
           title="Game 4"
-          className="w-full h-[80vh] max-w-4xl border-4 border-gray-700 rounded-lg shadow-xl"
+          className="w-full h-full border-4 border-gray-700 rounded-lg shadow-xl"
         ></iframe>
       </div>
       
