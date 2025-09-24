@@ -6,7 +6,7 @@ const Game4Page = () => {
   return (
     // 外層容器填滿整個螢幕並使用 flexbox
     <div className="flex flex-col items-center justify-start min-h-screen bg-gray-900 text-white p-4">
-      <h1 className="text-4xl font-bold mb-6 mt-12">嵌入的 HTML 遊戲(0924_1119)</h1>
+      <h1 className="text-4xl font-bold mb-6 mt-12">嵌入的 HTML 遊戲(0924_1124)</h1>
       
       {/* 這個 div 是 iframe 的容器，給予它 flex-grow 讓它佔據所有剩餘空間
         並使用 flexbox 讓 iframe 居中
