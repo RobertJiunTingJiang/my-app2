@@ -6,7 +6,7 @@ const Game4Page = () => {
   return (
     // 使用 Flexbox 讓內容垂直置中並填滿整個螢幕高度
     <div className="flex flex-col items-center justify-start min-h-screen bg-gray-900 text-white p-4">
-      <h1 className="text-4xl font-bold mb-6 mt-12">嵌入的 HTML 遊戲(0924_1114)</h1>
+      <h1 className="text-4xl font-bold mb-6 mt-12">嵌入的 HTML 遊戲(0924_1119)</h1>
       
       {/*
         這個 div 是 iframe 的容器，它將填滿所有剩餘空間
@@ -17,7 +17,7 @@ const Game4Page = () => {
           `w-full` 和 `h-full` 非常重要
         */}
         <iframe
-          src="/games/index.html"
+          src="/pub_game/enhanced_snake_game.html"
           title="Game 4"
           className="w-full h-full border-4 border-gray-700 rounded-lg shadow-xl"
         ></iframe>
