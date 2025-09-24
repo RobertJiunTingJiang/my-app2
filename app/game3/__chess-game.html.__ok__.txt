@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Two-Player Chess</title>
+    <style>
+        .chessboard {
+            display: grid;
+            grid-template-columns: repeat(8, 50px);
+            grid-gap: 0;
+            border: 2px solid #333;
+            width: 400px;
+            margin: 0 auto;
+        }
+        .square {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .white { background-color: white; }
+        .black { background-color: lightgray; }
+        .selected { background-color: rgba(255, 255, 0, 0.5); }
+        .possible-move { background-color: rgba(0, 255, 0, 0.3); }
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .status {
+            text-align: center;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="chess-game">
+        <h2>Two-Player Chess</h2>
+        <div class="status" id="game-status">White's Turn</div>
+        <div class="chessboard" id="board"></div>
+        <div class="controls">
+            <button onclick="resetGame()">Reset Game</button>
+        </div>
+    </div>
+
+    <script>
+        // Piece unicode symbols
+        const pieceMap = {
+            'br': '♜', 'bn': '♞', 'bb': '♝', 'bq': '♛', 'bk': '♚', 'bp': '♟',
+            'wr': '♖', 'wn': '♘', 'wb': '♗', 'wq': '♕', 'wk': '♔', 'wp': '♙'
+        };
+
+        // Initial board setup
+        const createInitialBoard = () => [
+            ['br', 'bn', 'bb', 'bq', 'bk', 'bb', 'bn', 'br'],
+            ['bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp'],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp'],
+            ['wr', 'wn', 'wb', 'wq', 'wk', 'wb', 'wn', 'wr']
+        ];
+
+        // Game state variables
+        let board = createInitialBoard();
+        let isWhiteTurn = true;
+        let selectedPiece = null;
+
+        // Render the chessboard
+        function renderBoard() {
+            const boardElement = document.getElementById('board');
+            boardElement.innerHTML = '';
+            board.forEach((row, rowIndex) => {
+                row.forEach((piece, colIndex) => {
+                    const square = document.createElement('div');
+                    square.className = `square ${(rowIndex + colIndex) % 2 === 0 ? 'white' : 'black'}`;
+                    square.textContent = pieceMap[piece] || '';
+                    square.dataset.row = rowIndex;
+                    square.dataset.col = colIndex;
+                    square.addEventListener('click', () => handleSquareClick(rowIndex, colIndex));
+                    boardElement.appendChild(square);
+                });
+            });
+        }
+
+        // Determine if a piece belongs to the current player
+        function isPieceOwner(piece) {
+            return piece && piece[0] === (isWhiteTurn ? 'w' : 'b');
+        }
+
+        // Handle square click
+        function handleSquareClick(row, col) {
+            const clickedPiece = board[row][col];
+            const gameStatus = document.getElementById('game-status');
+
+            // If no piece is selected
+            if (!selectedPiece) {
+                // Select a piece if it belongs to the current player
+                if (isPieceOwner(clickedPiece)) {
+                    selectedPiece = { row, col };
+                    highlightSquare(row, col);
+                }
+                return;
+            }
+
+            // If clicking the same piece, deselect
+            if (selectedPiece.row === row && selectedPiece.col === col) {
+                clearHighlights();
+                selectedPiece = null;
+                return;
+            }
+
+            // Attempt to move the selected piece
+            const success = movePiece(selectedPiece.row, selectedPiece.col, row, col);
+            
+            if (success) {
+                // Switch turns
+                isWhiteTurn = !isWhiteTurn;
+                gameStatus.textContent = `${isWhiteTurn ? 'White' : 'Black'}'s Turn`;
+            }
+
+            // Clear selection and highlights
+            clearHighlights();
+            selectedPiece = null;
+        }
+
+        // Highlight the selected square
+        function highlightSquare(row, col) {
+            const squares = document.querySelectorAll('.square');
+            squares.forEach(square => {
+                if (parseInt(square.dataset.row) === row && 
+                    parseInt(square.dataset.col) === col) {
+                    square.classList.add('selected');
+                }
+            });
+        }
+
+        // Clear all highlights
+        function clearHighlights() {
+            const squares = document.querySelectorAll('.square');
+            squares.forEach(square => {
+                square.classList.remove('selected');
+            });
+        }
+
+        // Basic move validation (extremely simplified)
+        function isValidMove(fromRow, fromCol, toRow, toCol) {
+            const piece = board[fromRow][fromCol];
+            const targetPiece = board[toRow][toCol];
+
+            // Can't move to a square with your own piece
+            if (targetPiece && targetPiece[0] === piece[0]) {
+                return false;
+            }
+
+            // Prevent capturing the king (basic check)
+            if (targetPiece && targetPiece.endsWith('k')) {
+                return false;
+            }
+
+            // Extremely basic pawn movement (just forward)
+            if (piece.endsWith('p')) {
+                const direction = piece.startsWith('w') ? -1 : 1;
+                const startRow = piece.startsWith('w') ? 6 : 1;
+                
+                // First move can go 2 squares
+                if (fromRow === startRow && 
+                    fromCol === toCol && 
+                    toRow === fromRow + 2 * direction &&
+                    !board[fromRow + direction][fromCol]) {
+                    return true;
+                }
+
+                // Regular move
+                if (fromCol === toCol && 
+                    toRow === fromRow + direction &&
+                    !targetPiece) {
+                    return true;
+                }
+
+                // Capture diagonally
+                if (Math.abs(fromCol - toCol) === 1 && 
+                    toRow === fromRow + direction &&
+                    targetPiece) {
+                    return true;
+                }
+
+                return false;
+            }
+
+            return true; // Very basic - would need full chess rules
+        }
+
+        // Move piece on the board
+        function movePiece(fromRow, fromCol, toRow, toCol) {
+            // Validate the move
+            if (!isValidMove(fromRow, fromCol, toRow, toCol)) {
+                return false;
+            }
+
+            // Perform the move
+            board[toRow][toCol] = board[fromRow][fromCol];
+            board[fromRow][fromCol] = '';
+
+            // Re-render the board
+            renderBoard();
+            return true;
+        }
+
+        // Reset the game
+        function resetGame() {
+            board = createInitialBoard();
+            isWhiteTurn = true;
+            selectedPiece = null;
+            document.getElementById('game-status').textContent = 'White\'s Turn';
+            renderBoard();
+        }
+
+        // Initial render
+        renderBoard();
+    </script>
+</body>
+</html>
