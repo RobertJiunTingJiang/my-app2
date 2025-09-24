@@ -29,6 +29,13 @@ export default function Home() {
   </button>
 </Link>
 
+<Link href="/game4" className="w-full">
+  <button
+    className="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-4 px-6 rounded-xl transition-all transform hover:scale-105 shadow-lg"
+  >
+    👾 玩 Game 4
+  </button>
+</Link>
 
       </div>
       <footer className="mt-8 text-gray-600 text-sm">
