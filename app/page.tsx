@@ -1,6 +1,6 @@
 'use client';
 
-//rj
+
 
 import Link from 'next/link';
 
@@ -20,7 +20,7 @@ export default function Home() {
           </button>
         </Link>
 
-// 在你的按鈕區塊中，新增以下程式碼：
+{/* 在你的按鈕區塊中，新增以下程式碼： */}
 <Link href="/game3">
   <button
     className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-6 rounded-xl transition-all transform hover:scale-105 shadow-lg"
