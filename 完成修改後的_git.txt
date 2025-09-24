@@ -5,5 +5,9 @@
 Bash
 
 git add .
-git commit -m "Your descriptive message here"
+git commit -m "Your descriptive message here加入第三個遊戲"
+git push origin master
+
+
+
 git push origin main
